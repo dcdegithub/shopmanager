@@ -10,7 +10,7 @@
             <div class="grid-content bg-purple-light">
             <h2>电商后台管理系统</h2>
             </div></el-col>
-        <el-col class="footer" :span="1"><a href="#">退出</a></el-col>
+        <el-col :span="1"><a @click="handleLogout()" class="logout" href="#">退出</a></el-col>
     </el-row>
   </el-header>
   <el-container>
@@ -93,6 +93,15 @@
 
 <script>
 export default {
+  methods:{
+    handleLogout(){
+      this.$router.push({
+        name:'login'
+      });
+      localStorage.clear();
+      this.$message.success('成功退出')
+    }
+  },
 beforeMount(){
     if(!localStorage.getItem('token')){
       this.$router.push({
@@ -114,7 +123,7 @@ beforeMount(){
      text-align: center;
      line-height: 60px;
  }
- .footer{
+ .logout{
      line-height: 60px;
      text-decoration: none;
  }
