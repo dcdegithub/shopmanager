@@ -7,6 +7,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/base.css'
 import axios from 'axios'
+import moment from 'moment'
+
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 // 挂载原型
 Vue.prototype.$http = axios
@@ -14,6 +16,9 @@ Vue.prototype.$http = axios
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.filter('fmtdate', (v) => {
+  return moment(v).format('YYYY-MM-DD');
+})
 
 /* eslint-disable no-new */
 new Vue({
