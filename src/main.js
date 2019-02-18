@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/base.css'
 import axios from 'axios'
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
+// 挂载原型
 Vue.prototype.$http = axios
 
 Vue.use(ElementUI)
