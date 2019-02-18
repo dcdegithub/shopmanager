@@ -6,13 +6,11 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/base.css'
-import axios from 'axios'
 import moment from 'moment'
 import CusBread from "@/components/cusBread"
+import HttpServer from "@/http.js"
 
-axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
-// 挂载原型
-Vue.prototype.$http = axios
+Vue.use(HttpServer)
 
 Vue.use(ElementUI)
 
