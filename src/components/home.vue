@@ -35,7 +35,7 @@
           </el-submenu>
 
           <!-- 2 -->
-          <el-submenu index="2">
+          <el-submenu index="rights">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>权限管理</span>
