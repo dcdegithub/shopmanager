@@ -6,20 +6,43 @@
 
           <!-- 表格 -->
     <el-table height="350px" :data="list" style="width: 100%">
-      <!--
-          id: 500
-          username: "admin"
-          email: "adsfad@qq.com"
-          mobile: "12345678"
-          create_time: 1486720211
-          mg_state: true
-          role_name: "主管"
-      -->
+      <el-table-column type="expand"  width="50">
+          <template slot-scope="scope">
+              <!-- 行列布局 -->
+              <el-row @close="deleteRole(scope.row,item1)"
+              v-for="(item1,i) in scope.row.children" :key="item1.id">
+                  <el-col :span="4">
+                      <el-tag closable type="success">{{item1.authName}}</el-tag>
+                      <i class="el-icon-arrow-right"></i>
+                  </el-col>
+                  <el-col :span="20">
+                      <el-row @close="deleteRole(scope.row,item2)" v-for="(item2,i) in item1.children" :key="item2.id">
+                          <el-col :span="4">
+                              <el-tag closable type="warning">
+                                  {{item2.authName}}
+                              </el-tag>
+                              <i class="el-icon-arrow-right"></i>
+                          </el-col>
+                          <el-col :span="20">
+                              <el-tag @close="deleteRole(scope.row,item3)" closable type="info" v-for="(item3,i) in item2.children" :key=item3.id>
+                                  {{item3.authName}}
+                              </el-tag>
+                          </el-col>
+                      </el-row>
+                  </el-col>
+              </el-row>
+              <el-row v-if="scope.row.children.length===0">
+                  <el-col>
+                      <span>未分配权限</span>
+                  </el-col>
+              </el-row>
+          </template>
+      </el-table-column>
       <el-table-column type="index" label="#" width="80"></el-table-column>
-      <el-table-column prop="roleName" label="角色名称" width="180"></el-table-column>
-      <el-table-column prop="roleDesc" label="角色描述" width="180"></el-table-column>
+      <el-table-column prop="roleName" label="角色名称" width="200"></el-table-column>
+      <el-table-column prop="roleDesc" label="角色描述" width="300"></el-table-column>
     
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="300">
         <template slot-scope="scope">
           <el-button
             @click="showDiaEditUser(scope.row)"
@@ -62,6 +85,19 @@ created(){
     this.getTableData()
 },
 methods:{
+    async deleteRole(role,right){
+        const res=await this.$http.delete(`roles/${role.id}/rights/${right.id}`)
+        const{
+            data,
+            meta:{
+                msg,status
+            }
+        }=res.data
+        if(status===200){
+            this.$message.success(msg)
+            role.children=data
+        }
+    },
     async getTableData(){
         const res=await this.$http.get(`roles`)
         console.log(res)
