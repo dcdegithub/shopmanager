@@ -61,14 +61,14 @@ export default {
   // },
   // created
   beforeMount () {
-    if (!localStorage.getItem('token')) {
-      this.$router.push({
-        name: 'login'
-      })
-      this.$message.warning('请先登录')
-    }
+    // if (!localStorage.getItem('token')) {
+    //   this.$router.push({
+    //     name: 'login'
+    //   })
+    //   this.$message.warning('请先登录')
+    // }
   },
-  mounted () {
+  created () {
     this.getMenus()
   },
   methods: {
