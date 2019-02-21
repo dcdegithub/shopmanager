@@ -51,6 +51,7 @@
         </el-tab-pane>
         <!-- 4 -->
         <el-tab-pane name="4" label="商品图片">
+           <el-form-item>
           <el-upload
             class="upload-demo"
             :headers='headers'
@@ -62,16 +63,31 @@
             <el-button size="small" type="primary">点击上传</el-button>
      
           </el-upload>
+           </el-form-item>
         </el-tab-pane>
         <!-- 5 -->
-        <el-tab-pane name="5" label="商品内容">角色管理</el-tab-pane>
+        <el-tab-pane name="5" label="商品内容">
+            <el-form-item>
+              <el-button @click="addGoods()">添加商品</el-button>
+              <quill-editor class="quill" v-model="formData.goods_introduce"></quill-editor>
+            </el-form-item>
+        </el-tab-pane>
       </el-tabs>
     </el-form>
   </el-card>
 </template>
 
 <script>
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+
+import { quillEditor } from "vue-quill-editor";
+
 export default {
+  components: {
+    quillEditor
+  },
   data() {
     return {
       active: "1",
@@ -79,7 +95,8 @@ export default {
         goods_name: "",
         goods_number: "",
         goods_price: "",
-        goods_weight: ""
+        goods_weight: "",
+        goods_introduce:''
       },
       options: [],
       selectedOptions: [1, 3, 6],
@@ -101,6 +118,11 @@ export default {
     this.getGoodsCate();
   },
   methods: {
+    // 添加商品
+    async addGoods(){
+
+    },
+    // 上传图片方法
      handleRemove(file, fileList) {
        console.log('remove');
        
@@ -194,5 +216,8 @@ export default {
 .form {
   height: 350px;
   overflow: auto;
+}
+.ql-editor,.ql-blank{
+  min-height:200px
 }
 </style>
