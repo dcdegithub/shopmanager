@@ -11,7 +11,7 @@
           <!-- 行列布局 -->
           <el-row
             @close="deleteRole(scope.row,item1)"
-            v-for="(item1,i) in scope.row.children"
+            v-for="(item1) in scope.row.children"
             :key="item1.id"
           >
             <el-col :span="4">
@@ -21,7 +21,7 @@
             <el-col :span="20">
               <el-row
                 @close="deleteRole(scope.row,item2)"
-                v-for="(item2,i) in item1.children"
+                v-for="(item2) in item1.children"
                 :key="item2.id"
               >
                 <el-col :span="4">
@@ -33,7 +33,7 @@
                     @close="deleteRole(scope.row,item3)"
                     closable
                     type="info"
-                    v-for="(item3,i) in item2.children"
+                    v-for="(item3) in item2.children"
                     :key="item3.id"
                   >{{item3.authName}}</el-tag>
                 </el-col>
@@ -110,9 +110,9 @@ export default {
   methods: {
     async setRights() {
       const arr1 = this.$refs.treeDom.getCheckedKeys();
-      console.log(arr1);
+      // console.log(arr1);
       const arr2 = this.$refs.treeDom.getHalfCheckedKeys();
-      console.log(arr2);
+      // console.log(arr2);
       const arr = [...arr1, ...arr2];
       const res = await this.$http.post(`roles/${this.currRoleID}/rights`, {
         rids: arr.join(",")
@@ -132,14 +132,14 @@ export default {
       this.dialogFormVisible = true;
       //   获取数据
       const res = await this.$http.get(`rights/tree`);
-      console.log(res);
+      // console.log(res);
       const {
         data,
         meta: { msg, status }
       } = res.data;
       if (status === 200) {
         this.treeList = data;
-        console.log(this.treeList);
+        // console.log(this.treeList);
         const temp = [];
         role.children.forEach(item1 => {
           // temp.push(item1.id);
@@ -150,7 +150,7 @@ export default {
             });
           });
         });
-        console.log(temp);
+        // console.log(temp);
         this.arrCheck = temp;
       }
     },
@@ -169,7 +169,7 @@ export default {
     },
     async getTableData() {
       const res = await this.$http.get(`roles`);
-      console.log(res);
+      // console.log(res);
       const {
         data,
         meta: { msg, status }

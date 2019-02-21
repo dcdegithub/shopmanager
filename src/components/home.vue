@@ -22,13 +22,13 @@
           class="el-menu-vertical-demo"
         >
           <!-- 1 -->
-          <el-submenu :index="item.path+''" v-for="(item,i) in menus" :key="item.id">
+          <el-submenu :index="item.path+''" v-for="(item) in menus" :key="item.id">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{item.authName}}</span>
             </template>
 
-            <el-menu-item :index="item1.path+''" v-for="(item1,i) in item.children" :key="item1.id">
+            <el-menu-item :index="item1.path+''" v-for="(item1) in item.children" :key="item1.id">
               <i class="el-icon-menu"></i>
               <span>{{item1.authName}}</span>
             </el-menu-item>
@@ -75,9 +75,9 @@ export default {
     // 动态路由
     async getMenus(){
       const res=await this.$http.get(`menus`)
-      console.log(111111);
+      // console.log(111111);
       
-      console.log(res)
+      // console.log(res)
       const {
         data,
         meta:{

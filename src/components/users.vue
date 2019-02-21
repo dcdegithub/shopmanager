@@ -278,7 +278,7 @@ export default {
       this.roles = res.data.data;
 
       const res2 = await this.$http.get(`users/${user.id}`);
-      console.log(res2);
+      // console.log(res2);
       // 给下拉框v-model绑定的selectVal赋值
       this.selectVal = res2.data.data.rid;
     },
@@ -426,7 +426,7 @@ export default {
           this.pagesize
         }`
       );
-      console.log(res);
+      // console.log(res);
       const {
         data,
         meta: { msg, status }
