@@ -45,14 +45,24 @@
         </el-tab-pane>
         <!-- 3 -->
         <el-tab-pane name="3" label="商品属性">
-          
-            <el-form-item :label="item.attr_name"  v-for="(item,i) in arrStatic" :key='item.attr_id'>
-              <el-input v-model="item.attr_vals" ></el-input>
-            </el-form-item>
-          
+          <el-form-item :label="item.attr_name" v-for="(item,i) in arrStatic" :key="item.attr_id">
+            <el-input v-model="item.attr_vals"></el-input>
+          </el-form-item>
         </el-tab-pane>
         <!-- 4 -->
-        <el-tab-pane name="4" label="商品图片">定时任务补偿</el-tab-pane>
+        <el-tab-pane name="4" label="商品图片">
+          <el-upload
+            class="upload-demo"
+            :headers='headers'
+            action="http://localhost:8888/api/private/v1/upload"
+            :on-success="handleSuccess"
+            :on-remove="handleRemove"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+     
+          </el-upload>
+        </el-tab-pane>
         <!-- 5 -->
         <el-tab-pane name="5" label="商品内容">角色管理</el-tab-pane>
       </el-tabs>
@@ -80,13 +90,27 @@ export default {
       },
       arrDy: [],
       arrStatic: [],
-      checkList: []
+      checkList: [],
+      fileList:[],
+      headers:{
+        Authorization:localStorage.getItem("token")
+      }
     };
   },
   created() {
     this.getGoodsCate();
   },
   methods: {
+     handleRemove(file, fileList) {
+       console.log('remove');
+       
+        console.log(file, fileList);
+      },
+      handleSuccess(response,file, fileList) {
+        console.log('success');
+        
+        console.log(file);
+      },
     async changeTab() {
       if (this.active === "2") {
         if (this.selectedOptions.length !== 3) {
