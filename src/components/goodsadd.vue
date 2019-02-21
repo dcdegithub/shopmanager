@@ -37,19 +37,20 @@
         </el-tab-pane>
         <!-- 2 -->
         <el-tab-pane name="2" label="商品参数">
-           <el-form-item :label="item.attr_name" 
-           v-for='(item) in arrDy' :key="item.attr_id">
-          <el-checkbox-group v-model="checkList">
-            <el-checkbox :label="item1" 
-            v-for='(item1,i) in item.attr_vals' :key='i'>
-            </el-checkbox>
-           
-            
-          </el-checkbox-group>
+          <el-form-item :label="item.attr_name" v-for="(item) in arrDy" :key="item.attr_id">
+            <el-checkbox-group v-model="item.attr_vals">
+              <el-checkbox border :label="item1" v-for="(item1,i) in item.attr_vals" :key="i"></el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
         </el-tab-pane>
         <!-- 3 -->
-        <el-tab-pane name="3" label="商品属性">角色管理</el-tab-pane>
+        <el-tab-pane name="3" label="商品属性">
+          
+            <el-form-item :label="item.attr_name"  v-for="(item,i) in arrStatic" :key='item.attr_id'>
+              <el-input v-model="item.attr_vals" ></el-input>
+            </el-form-item>
+          
+        </el-tab-pane>
         <!-- 4 -->
         <el-tab-pane name="4" label="商品图片">定时任务补偿</el-tab-pane>
         <!-- 5 -->
@@ -71,14 +72,15 @@ export default {
         goods_weight: ""
       },
       options: [],
-      selectedOptions: [1,3,6],
+      selectedOptions: [1, 3, 6],
       defaultProp: {
         label: "cat_name",
         value: "cat_id",
         children: "children"
       },
       arrDy: [],
-      checkList:[]
+      arrStatic: [],
+      checkList: []
     };
   },
   created() {
@@ -108,11 +110,34 @@ export default {
             // }else{
             //   item.attr_vals=item.attr_vals.trim().split(',')
             // }
-            item.attr_vals=item.attr_vals.trim().length===0?[]:item.attr_vals.trim().split(',')
+            item.attr_vals =
+              item.attr_vals.trim().length === 0
+                ? []
+                : item.attr_vals.trim().split(",");
             // console.log(item.attr_vals);
-            
           });
-          
+        }
+      }
+      if (this.active === "3") {
+        if (this.selectedOptions.length !== 3) {
+          this.$message.warning("请先选择三级分类");
+          return;
+        }
+        const res = await this.$http.get(
+          `categories/${this.selectedOptions[2]}/attributes?sel=only`
+        );
+        // console.log(res);
+        const {
+          data,
+          meta: { msg, status }
+        } = res.data;
+        if (status === 200) {
+          this.arrStatic = data;
+          console.log(this.arrStatic);
+
+          // this.Static.forEach(item => {
+          //   item.attr_vals=item.attr_vals.trim().length===0?[]:item.attr_vals.trim().split(',')
+          // });
         }
       }
     },
