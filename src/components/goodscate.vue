@@ -120,6 +120,18 @@ export default {
   methods: {
     // 添加分类 - 发送请求
     async addCate() {
+        if(this.selectedOptions.length===0){
+            this.form.cat_pid=0
+            this.form.cat_level=0
+        }
+        if(this.selectedOptions.length===1){
+            this.form.cat_pid=this.selectedOptions[0]
+            this.form.cat_level=1
+        }
+        if(this.selectedOptions.length===2){
+            this.form.cat_pid=this.selectedOptions[1]
+            this.form.cat_level=2
+        }
         const res=await this.$http.post(`categories`,this.form)
         console.log(res)
         const {
@@ -134,6 +146,7 @@ export default {
     },
     // 添加分类- 显示对话框
     async addGoodsCate() {
+        this.form.cat_name=""
       // 获取两级分类的数据
       const res = await this.$http.get(`categories?type=2`);
       this.caslist = res.data.data;
