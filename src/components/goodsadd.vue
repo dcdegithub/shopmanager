@@ -22,9 +22,13 @@
             <el-input v-model="formData.goods_price"></el-input>
           </el-form-item>
           <el-form-item label="商品重量">
+            <el-input v-model="formData.goods_weight"></el-input>
+          </el-form-item>
+
+          <el-form-item label="商品数量">
             <el-input v-model="formData.goods_number"></el-input>
           </el-form-item>
-          <el-form-item label="商品数量">
+          <el-form-item label="商品分类">
             <el-cascader
               clearable
               expand-trigger="hover"
@@ -45,32 +49,31 @@
         </el-tab-pane>
         <!-- 3 -->
         <el-tab-pane name="3" label="商品属性">
-          <el-form-item :label="item.attr_name" v-for="(item,i) in arrStatic" :key="item.attr_id">
+          <el-form-item :label="item.attr_name" v-for="(item) in arrStatic" :key="item.attr_id">
             <el-input v-model="item.attr_vals"></el-input>
           </el-form-item>
         </el-tab-pane>
         <!-- 4 -->
         <el-tab-pane name="4" label="商品图片">
-           <el-form-item>
-          <el-upload
-            class="upload-demo"
-            :headers='headers'
-            action="http://localhost:8888/api/private/v1/upload"
-            :on-success="handleSuccess"
-            :on-remove="handleRemove"
-            list-type="picture"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-     
-          </el-upload>
-           </el-form-item>
+          <el-form-item>
+            <el-upload
+              class="upload-demo"
+              :headers="headers"
+              action="http://localhost:8888/api/private/v1/upload"
+              :on-success="handleSuccess"
+              :on-remove="handleRemove"
+              list-type="picture"
+            >
+              <el-button size="small" type="primary">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
         </el-tab-pane>
         <!-- 5 -->
         <el-tab-pane name="5" label="商品内容">
-            <el-form-item>
-              <el-button @click="addGoods()">添加商品</el-button>
-              <quill-editor class="quill" v-model="formData.goods_introduce"></quill-editor>
-            </el-form-item>
+          <el-form-item>
+            <el-button @click="addGoods()">添加商品</el-button>
+            <quill-editor class="quill" v-model="formData.goods_introduce"></quill-editor>
+          </el-form-item>
         </el-tab-pane>
       </el-tabs>
     </el-form>
@@ -93,10 +96,13 @@ export default {
       active: "1",
       formData: {
         goods_name: "",
-        goods_number: "",
+        goods_cat: "",
         goods_price: "",
+        goods_number: "",
         goods_weight: "",
-        goods_introduce:''
+        goods_introduce: "",
+        pics: [],
+        attrs: []
       },
       options: [],
       selectedOptions: [1, 3, 6],
@@ -108,9 +114,9 @@ export default {
       arrDy: [],
       arrStatic: [],
       checkList: [],
-      fileList:[],
-      headers:{
-        Authorization:localStorage.getItem("token")
+      fileList: [],
+      headers: {
+        Authorization: localStorage.getItem("token")
       }
     };
   },
@@ -119,49 +125,90 @@ export default {
   },
   methods: {
     // 添加商品
-    async addGoods(){
+    async addGoods() {
+      this.formData.goods_cat = this.selectedOptions.join(",");
 
+      const arr1 = this.arrDy.map(item => {
+        return { attr_id: item.attr_id, attr_value: item.attr_vals.join(",") };
+      });
+      const arr2 = this.arrStatic.map(item => {
+        return { attr_id: item.attr_id, attr_value: item.attr_vals };
+      });
+      this.formData.attrs = [...arr1, ...arr2];
+      // console.log(11111111111);
+      // console.log(this.formData);
+      const res = await this.$http.post(`goods`, this.formData);
+      // console.log(res);
+      const {
+        data,
+        meta: { msg, status }
+      } = res.data;
+      console.log(1111);
+
+      console.log(data);
+
+      if (status === 201) {
+        this.$message.success(msg);
+        this.getGoodsCate();
+      }
     },
     // 上传图片方法
-     handleRemove(file, fileList) {
-       console.log('remove');
-       
-        console.log(file, fileList);
-      },
-      handleSuccess(response,file, fileList) {
-        console.log('success');
-        
-        console.log(file);
-      },
+    handleRemove(file, fileList) {
+      console.log("remove");
+
+      console.log(file);
+      // response.data.tmp_path
+      const Index = this.formData.pics.findIndex(item => {
+        return item.pic === file.response.data.tmp_path;
+      });
+      this.formData.pics.splice(Index, 1);
+    },
+    handleSuccess(response, file, fileList) {
+      console.log("success");
+      console.log(response);
+
+      console.log(file);
+      // response.data.tmp_path
+      this.formData.pics.push({
+        pics: response.data.tmp_path
+      });
+    },
     async changeTab() {
-      if (this.active === "2") {
+      if (this.active === "2" || this.active === "3") {
         if (this.selectedOptions.length !== 3) {
           this.$message.warning("请先选择三级分类");
+          if (this.active === "2") {
+            this.arrDy = [];
+          } else {
+            this.arrStatic = [];
+          }
           return;
         }
-        const res = await this.$http.get(
-          `categories/${this.selectedOptions[2]}/attributes?sel=many`
-        );
-        // console.log(res);
-        const {
-          data,
-          meta: { msg, status }
-        } = res.data;
-        if (status === 200) {
-          this.arrDy = data;
-          // console.log(this.arrDy);
-          this.arrDy.forEach(item => {
-            // if(item.attr_vals.length===0){
-            //   item.attr_vals=[]
-            // }else{
-            //   item.attr_vals=item.attr_vals.trim().split(',')
-            // }
-            item.attr_vals =
-              item.attr_vals.trim().length === 0
-                ? []
-                : item.attr_vals.trim().split(",");
-            // console.log(item.attr_vals);
-          });
+        if (this.active === "3") {
+          const res = await this.$http.get(
+            `categories/${this.selectedOptions[2]}/attributes?sel=many`
+          );
+          // console.log(res);
+          const {
+            data,
+            meta: { msg, status }
+          } = res.data;
+          if (status === 200) {
+            this.arrDy = data;
+            // console.log(this.arrDy);
+            this.arrDy.forEach(item => {
+              // if(item.attr_vals.length===0){
+              //   item.attr_vals=[]
+              // }else{
+              //   item.attr_vals=item.attr_vals.trim().split(',')
+              // }
+              item.attr_vals =
+                item.attr_vals.trim().length === 0
+                  ? []
+                  : item.attr_vals.trim().split(",");
+              // console.log(item.attr_vals);
+            });
+          }
         }
       }
       if (this.active === "3") {
@@ -217,7 +264,8 @@ export default {
   height: 350px;
   overflow: auto;
 }
-.ql-editor,.ql-blank{
-  min-height:200px
+.ql-editor,
+.ql-blank {
+  min-height: 200px;
 }
 </style>

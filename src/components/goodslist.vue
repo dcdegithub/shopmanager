@@ -13,7 +13,7 @@
     </el-row>
 
     <!-- 表格 -->
-    <el-table height="450px" border stripe :data="list" style="width: 100%">
+    <el-table height="400px" border stripe :data="list" style="width: 100%">
       <!-- 序号 -->
       <el-table-column type="index"></el-table-column>
 
