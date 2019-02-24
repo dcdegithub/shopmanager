@@ -10,7 +10,7 @@ import Goodslist from '@/components/goodslist'
 import Goodsadd from '@/components/goodsadd'
 import Goodscate from '@/components/goodscate'
 import Goodsparams from '@/components/goodsparams'
-
+import Orders from '@/components/orders'
 
 Vue.use(Router)
 
@@ -48,13 +48,17 @@ const router = new Router({
         name: 'params',
         path: '/params',
         component: Goodsparams
+      },{
+        name: 'orders',
+        path: '/orders',
+        component: Orders
+      }, {
+        name: 'login',
+        path: '/login',
+        component: Login
+  
       }
       ]
-
-    }, {
-      name: 'login',
-      path: '/login',
-      component: Login
 
     }
   ]
