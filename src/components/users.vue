@@ -26,7 +26,7 @@
       </el-col>
     </el-row>
     <!-- 表格 -->
-    <el-table height="350px" :data="list" style="width: 100%">
+    <el-table v-loading="loading" height="350px" :data="list" style="width: 100%">
       <!--
           id: 500
           username: "admin"
@@ -236,7 +236,8 @@ export default {
       selectVal: -1,
       currUserId: -1,
       // 角色数组
-      roles: []
+      roles: [],
+      loading:true
     };
   },
   // mounted(){}
@@ -368,6 +369,7 @@ export default {
         // 更新表格
         this.getTableData();
       }
+      this.dialogFormVisibleAdd = false;
     },
     // 添加- 打开对话框
     showDiaAddUser() {
@@ -434,6 +436,7 @@ export default {
       if (status === 200) {
         this.total = data.total;
         this.list = data.users;
+         this.loading=false
         // console.log(this.list);
       }
     }
