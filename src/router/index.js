@@ -11,6 +11,7 @@ import Goodsadd from '@/components/goodsadd'
 import Goodscate from '@/components/goodscate'
 import Goodsparams from '@/components/goodsparams'
 import Orders from '@/components/orders'
+import Reports from '@/components/reports'
 
 Vue.use(Router)
 
@@ -53,12 +54,18 @@ const router = new Router({
         path: '/orders',
         component: Orders
       }, {
-        name: 'login',
-        path: '/login',
-        component: Login
+        name: 'reports',
+        path: '/reports',
+        component: Reports
   
       }
       ]
+
+    },
+    {
+      name: 'login',
+      path: '/login',
+      component: Login
 
     }
   ]
